@@ -52,6 +52,9 @@
     <Compile Include="YmlParserSpec.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\GurkBurk\GurkBurk.csproj">
       <Project>{5453D038-F5CF-4D31-87A6-CEF78C57BCD2}</Project>
       <Name>GurkBurk</Name>
