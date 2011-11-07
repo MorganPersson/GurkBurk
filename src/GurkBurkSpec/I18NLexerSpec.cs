@@ -54,6 +54,14 @@ namespace GurkBurkSpec
         }
 
         [Test]
+        public void Should_parse_scenario_without_feature()
+        {
+            const string words = "Scenario: bar";
+            lexer.scan(words);
+            listener.AssertWasCalled(_ => _.scenario("Scenario", "bar", "", 1));
+        }
+
+        [Test]
         public void Should_parse_feature_with_title_if_no_space_between_kolon_and_title()
         {
             const string words = "Feature:this is the title";
@@ -98,10 +106,13 @@ namespace GurkBurkSpec
         [Test]
         public void Should_parse_background()
         {
-            const string words = "Feature: foo\nBackground: bar";
+            const string words = "Feature: foo\nBackground: bar\nGiven background step\nScenario:the scenario\nGiven scenario step";
             lexer.scan(words);
             listener.AssertWasCalled(_ => _.feature("Feature", "foo", "", 1));
             listener.AssertWasCalled(_ => _.background("Background", "bar", "", 2));
+            listener.AssertWasCalled(_ => _.step("Given", "background step", 3));
+            listener.AssertWasCalled(_ => _.scenario("Scenario", "the scenario", "", 4));
+            listener.AssertWasCalled(_ => _.step("Given", "scenario step", 5));
         }
 
         [Test]
@@ -233,7 +244,7 @@ namespace GurkBurkSpec
             listener.AssertWasCalled(_ => _.scenario("Scenario", "bar", "", 6));
         }
 
-        [Test]
+        [Test, Ignore(@"Seems the ""official"" Gherkin runner allows scenarios without features")]
         public void scenario_must_be_preceeded_with_a_feature()
         {
             const string words = "Scenario: bar";
@@ -297,6 +308,26 @@ namespace GurkBurkSpec
             listener.AssertWasCalled(_ => _.step("Given", "a", 3));
             listener.AssertWasCalled(_ => _.docString("this\n spans \n multiple lines\n", 4));
             listener.AssertWasCalled(_ => _.step("When", "b", 8));
+        }
+
+        [Test]
+        public void Should_raise_eof_when_file_is_parsed()
+        {
+            const string words = "Feature: foo\nScenario: bar\nGiven a\nWhen b\nThen z";
+            lexer.scan(words);
+            listener.AssertWasCalled(_ => _.eof());
+        }
+
+        [Test]
+        public void Should_trim_whitespace_at_end_of_token()
+        {
+            const string words = "Feature: foo  \nScenario: bar  \nGiven  a \t  \n\n When b  \n     \nFeature: bar";
+            lexer.scan(words);
+            listener.AssertWasCalled(_ => _.feature("Feature", "foo", "", 1));
+            listener.AssertWasCalled(_ => _.scenario("Scenario", "bar", "", 2));
+            listener.AssertWasCalled(_ => _.step("Given", "a", 3));
+            listener.AssertWasCalled(_ => _.step("When", "b", 5));
+            listener.AssertWasCalled(_ => _.feature("Feature", "bar", "", 7));
         }
 
         [Test]

@@ -11,6 +11,8 @@ namespace GurkBurk
         private LineMatcher lineMatcher;
         protected LineEnumerator LineEnumerator { get; private set; }
 
+        private readonly char[] whiteSpace = new[] { '\n', ' ', '\t' };
+
         protected Lexer(Lexer parent, LineEnumerator lineEnumerator, Listener listener, Language language)
         {
             this.parent = parent;
@@ -20,7 +22,7 @@ namespace GurkBurk
             //TODO: Should probably unsubscribe to event at some point
             Language.LanguageChanged += ChangeLanguage;
         }
-        
+
         protected abstract void HandleToken(LineMatch match);
 
         public void Parse()
@@ -127,7 +129,8 @@ namespace GurkBurk
                 else
                     LineEnumerator.MoveToPrevious();
             }
-            return stepText.TrimEnd(new[] { '\n' });
+
+            return stepText.TrimEnd(whiteSpace);
         }
 
         private LineMatcher matchAllLines;

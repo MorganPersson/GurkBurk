@@ -11,7 +11,8 @@ namespace GurkBurk
         {
             children = new Lexer[]
                          {
-                             new CommentLexer(this, lineEnumerator, Listener, Language), 
+                             new CommentLexer(this, lineEnumerator, listener, language), 
+                             new StepLexer(this, lineEnumerator, listener, language), 
                          };
         }
 

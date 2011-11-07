@@ -13,7 +13,8 @@ namespace GurkBurk
                          {
                              new FeatureLexer(this, lineEnumerator, listener, language),
                              new TagLexer(this, lineEnumerator, listener, language),
-                             new CommentLexer(this, lineEnumerator, listener, language)
+                             new CommentLexer(this, lineEnumerator, listener, language),
+                             new ScenarioLexer(this, lineEnumerator, listener, language), 
                          };
         }
 
