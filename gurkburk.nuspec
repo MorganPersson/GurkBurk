@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+	<metadata>
+		<id>GurkBurk</id>
+		<version>0.1.0.0</version>
+		<title>GurkBurk</title>
+		<authors>Morgan Persson</authors>
+		<owners>Morgan Persson</owners>
+		<licenseUrl>http://www.opensource.org/licenses/bsd-license.php</licenseUrl>
+		<projectUrl>http://github.com/MorganPersson/GurkBurk</projectUrl>
+		<!-- <iconUrl></iconUrl> -->
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>Gherkin parser</description>
+		<language>en-US</language>
+		<tags>gherkin cucumber bdd</tags>
+		<dependencies>
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="build\v3.5\GurkBurk.dll" target="lib\net35" />
+		<file src="build\v4.0\GurkBurk.dll" target="lib\net40" />
+	</files>
+</package>

@@ -4,9 +4,12 @@ namespace GurkBurk
 {
     public class DocStringLexer : Lexer
     {
+        private readonly Listener listener;
+
         public DocStringLexer(Lexer parent, LineEnumerator lineEnumerator, Listener listener, Language language)
-            : base(parent, lineEnumerator, listener, language)
+            : base(parent, lineEnumerator, language)
         {
+            this.listener = listener;
         }
 
         public override IEnumerable<string> TokenWords { get { return new[] { "\"\"\"" }; } }
@@ -26,7 +29,7 @@ namespace GurkBurk
                 text += "\n" + LineEnumerator.Current.Text;
                 atEnd = text.TrimEnd().EndsWith(DocString);
             }
-            Listener.docString(text.TrimEnd(new[] { DocString[0] }), line);
+            listener.docString(text.TrimEnd(new[] { DocString[0] }), line);
         }
     }
 }

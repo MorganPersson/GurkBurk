@@ -7,14 +7,24 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GurkBurkSpec", "GurkBurkSpe
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Automated-3.5|Any CPU = Automated-3.5|Any CPU
+		Automated-4.0|Any CPU = Automated-4.0|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5453D038-F5CF-4D31-87A6-CEF78C57BCD2}.Automated-3.5|Any CPU.ActiveCfg = Automated-3.5|Any CPU
+		{5453D038-F5CF-4D31-87A6-CEF78C57BCD2}.Automated-3.5|Any CPU.Build.0 = Automated-3.5|Any CPU
+		{5453D038-F5CF-4D31-87A6-CEF78C57BCD2}.Automated-4.0|Any CPU.ActiveCfg = Automated-4.0|Any CPU
+		{5453D038-F5CF-4D31-87A6-CEF78C57BCD2}.Automated-4.0|Any CPU.Build.0 = Automated-4.0|Any CPU
 		{5453D038-F5CF-4D31-87A6-CEF78C57BCD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5453D038-F5CF-4D31-87A6-CEF78C57BCD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5453D038-F5CF-4D31-87A6-CEF78C57BCD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5453D038-F5CF-4D31-87A6-CEF78C57BCD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD5C9FCC-93EB-4669-83DB-6903B10C45CA}.Automated-3.5|Any CPU.ActiveCfg = Automated-3.5|Any CPU
+		{AD5C9FCC-93EB-4669-83DB-6903B10C45CA}.Automated-3.5|Any CPU.Build.0 = Automated-3.5|Any CPU
+		{AD5C9FCC-93EB-4669-83DB-6903B10C45CA}.Automated-4.0|Any CPU.ActiveCfg = Automated-3.5|Any CPU
+		{AD5C9FCC-93EB-4669-83DB-6903B10C45CA}.Automated-4.0|Any CPU.Build.0 = Automated-3.5|Any CPU
 		{AD5C9FCC-93EB-4669-83DB-6903B10C45CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AD5C9FCC-93EB-4669-83DB-6903B10C45CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD5C9FCC-93EB-4669-83DB-6903B10C45CA}.Release|Any CPU.ActiveCfg = Release|Any CPU

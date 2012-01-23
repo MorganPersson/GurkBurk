@@ -209,18 +209,18 @@ namespace GurkBurkSpec
         {
             const string words = "@tag\nFeature: foo";
             lexer.scan(words);
-            listener.AssertWasCalled(_ => _.tag("tag", 1));
+            listener.AssertWasCalled(_ => _.tag("@tag", 1));
             listener.AssertWasCalled(_ => _.feature("Feature", "foo", "", 2));
         }
 
         [Test]
         public void Should_parse_multiple_tags_on_same_line()
         {
-            const string words = "@tag @tag2\n@tag3\nFeature: foo";
+            const string words = "@tag @tag2\n@tag med space\nFeature: foo";
             lexer.scan(words);
-            listener.AssertWasCalled(_ => _.tag("tag", 1));
-            listener.AssertWasCalled(_ => _.tag("tag2", 1));
-            listener.AssertWasCalled(_ => _.tag("tag3", 2));
+            listener.AssertWasCalled(_ => _.tag("@tag", 1));
+            listener.AssertWasCalled(_ => _.tag("@tag2", 1));
+            listener.AssertWasCalled(_ => _.tag("@tag med space", 2));
             listener.AssertWasCalled(_ => _.feature("Feature", "foo", "", 3));
         }
 
@@ -230,8 +230,8 @@ namespace GurkBurkSpec
             const string words = "Feature: foo\n@tag1 @tag2\nScenario: xyz";
             lexer.scan(words);
             listener.AssertWasCalled(_ => _.feature("Feature", "foo", "", 1));
-            listener.AssertWasCalled(_ => _.tag("tag1", 2));
-            listener.AssertWasCalled(_ => _.tag("tag2", 2));
+            listener.AssertWasCalled(_ => _.tag("@tag1", 2));
+            listener.AssertWasCalled(_ => _.tag("@tag2", 2));
             listener.AssertWasCalled(_ => _.scenario("Scenario", "xyz", "", 3));
         }
 
@@ -335,10 +335,10 @@ namespace GurkBurkSpec
         {
             const string words = TestData.AcceptanceTest;
             lexer.scan(words);
-            listener.AssertWasCalled(_ => _.tag("tag1", 2));
-            listener.AssertWasCalled(_ => _.tag("tag2", 2));
+            listener.AssertWasCalled(_ => _.tag("@tag1", 2));
+            listener.AssertWasCalled(_ => _.tag("@tag2", 2));
             listener.AssertWasCalled(_ => _.feature("Feature", "foo", "\tAs a\n\tI want\n\tSo that", 3));
-            listener.AssertWasCalled(_ => _.tag("tag3", 8));
+            listener.AssertWasCalled(_ => _.tag("@tag3", 8));
             listener.AssertWasCalled(_ => _.scenario("Scenario", "x", "", 9));
             listener.AssertWasCalled(_ => _.step("Given", "a\n\tb\n\tc", 10));
             listener.AssertWasCalled(_ => _.step("When", "d", 13));
@@ -356,6 +356,7 @@ namespace GurkBurkSpec
         [Test, Explicit]
         public void PerformanceTest()
         {
+            //simple perf test, runs around 390ms om my machine.
             const string words = TestData.AcceptanceTest;
             lexer.scan(words);
             var str = "";

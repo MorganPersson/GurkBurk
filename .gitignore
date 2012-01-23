@@ -4,5 +4,6 @@ build
 _ReSharper.*
 *.ReSharper.*
 *.user
+*.cache
 bin
 obj

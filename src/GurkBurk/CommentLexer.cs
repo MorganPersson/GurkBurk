@@ -6,10 +6,12 @@ namespace GurkBurk
     public class CommentLexer : Lexer
     {
         private readonly Regex isLanguage = new Regex(@"language\s*(:|\s)\s*(?<language>[a-zA-Z\-]+)", RegexOptions.Compiled);
+        private readonly Listener listener;
 
         public CommentLexer(Lexer parent, LineEnumerator lineEnumerator, Listener listener, Language language)
-            : base(parent, lineEnumerator, listener, language)
+            : base(parent, lineEnumerator, language)
         {
+            this.listener = listener;
         }
 
         public override IEnumerable<string> TokenWords { get { return new[] { "#" }; } }
@@ -23,7 +25,7 @@ namespace GurkBurk
             if (IsLanguageComment(text))
                 ChangeLanguage(text);
 
-            Listener.comment(match.Text, match.Line);
+            listener.comment(match.Text, match.Line);
         }
 
         private void ChangeLanguage(string comment)

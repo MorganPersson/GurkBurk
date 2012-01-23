@@ -21,7 +21,7 @@ namespace GurkBurk
                 .Select(_ => new { TokenWord = _, Words = _.Where(c => c == ' ').Count() })
                 .OrderByDescending(_ => _.Words)
                 .Select(_ => _.TokenWord) //.Replace("|", @"\|"))
-                .ToList();
+                .ToArray();
             string allWords = "(" + string.Join(")|(", words) + ")";
             regex = new Regex(string.Format(LineMatch, allWords));
         }

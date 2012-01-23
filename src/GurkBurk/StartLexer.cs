@@ -7,7 +7,7 @@ namespace GurkBurk
         private readonly Lexer[] children;
 
         public StartLexer(Lexer parent, LineEnumerator lineEnumerator, Listener listener, Language language)
-            : base(parent, lineEnumerator, listener, language)
+            : base(parent, lineEnumerator, language)
         {
             children = new Lexer[]
                          {

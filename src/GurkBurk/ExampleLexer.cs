@@ -5,10 +5,12 @@ namespace GurkBurk
     public class ExampleLexer : Lexer
     {
         private readonly Lexer[] children;
+        private readonly Listener listener;
 
         public ExampleLexer(Lexer parent, LineEnumerator lineEnumerator, Listener listener, Language language)
-            : base(parent, lineEnumerator, listener, language)
+            : base(parent, lineEnumerator, language)
         {
+            this.listener = listener;
             children = new Lexer[]
                            {
                                new RowLexer(this,lineEnumerator, listener,language), 
@@ -22,7 +24,7 @@ namespace GurkBurk
 
         protected override void HandleToken(LineMatch match)
         {
-            Listener.examples(match.Token, string.Empty, string.Empty, match.Line);
+            listener.examples(match.Token, string.Empty, string.Empty, match.Line);
         }
     }
 }

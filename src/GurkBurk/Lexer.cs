@@ -7,18 +7,16 @@ namespace GurkBurk
     public abstract class Lexer
     {
         protected Language Language { get; private set; }
-        protected readonly Listener Listener;
         private LineMatcher lineMatcher;
         protected LineEnumerator LineEnumerator { get; private set; }
 
         private readonly char[] whiteSpace = new[] { '\n', ' ', '\t' };
 
-        protected Lexer(Lexer parent, LineEnumerator lineEnumerator, Listener listener, Language language)
+        protected Lexer(Lexer parent, LineEnumerator lineEnumerator, Language language)
         {
             this.parent = parent;
             LineEnumerator = lineEnumerator;
             Language = language;
-            Listener = listener;
             //TODO: Should probably unsubscribe to event at some point
             Language.LanguageChanged += ChangeLanguage;
         }
@@ -49,8 +47,12 @@ namespace GurkBurk
 
         private LineMatch ReadNextStep()
         {
-            while (LineEnumerator.HasMore && string.IsNullOrWhiteSpace(LineEnumerator.Current.Text))
+            var text = (LineEnumerator.Current.Text??"").Trim(whiteSpace);
+            while (LineEnumerator.HasMore && string.IsNullOrEmpty(text))
+            {
                 LineEnumerator.MoveToNext();
+                text = (LineEnumerator.Current.Text ?? "").Trim(whiteSpace);
+            }
             LineMatch lineMatch = Children.Any() ? LineMatcher.Match(LineEnumerator.Current) : null;
             if (lineMatch == null)
                 return null;

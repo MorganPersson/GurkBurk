@@ -5,10 +5,13 @@ namespace GurkBurk
     public class ScenarioLexer : Lexer
     {
         private readonly Lexer[] children;
+        protected readonly Listener Listener;
 
         public ScenarioLexer(Lexer parent, LineEnumerator lineEnumerator, Listener listener, Language language)
-            : base(parent, lineEnumerator, listener, language)
+            : base(parent, lineEnumerator, language)
         {
+            Listener = listener;
+
             children = new Lexer[]
                          {
                              new StepLexer(this, lineEnumerator, listener, language), 

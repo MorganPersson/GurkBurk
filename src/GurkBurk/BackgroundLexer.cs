@@ -5,10 +5,12 @@ namespace GurkBurk
     public class BackgroundLexer : Lexer
     {
         private readonly Lexer[] children;
+        private readonly Listener listener;
 
         public BackgroundLexer(Lexer parent, LineEnumerator lineEnumerator, Listener listener, Language language)
-            : base(parent, lineEnumerator, listener, language)
+            : base(parent, lineEnumerator, language)
         {
+            this.listener = listener;
             children = new Lexer[]
                          {
                              new CommentLexer(this, lineEnumerator, listener, language), 
@@ -21,7 +23,7 @@ namespace GurkBurk
 
         protected override void HandleToken(LineMatch match)
         {
-            Listener.background(match.Token, match.Text, string.Empty, match.Line);
+            listener.background(match.Token, match.Text, string.Empty, match.Line);
         }
     }
 }
