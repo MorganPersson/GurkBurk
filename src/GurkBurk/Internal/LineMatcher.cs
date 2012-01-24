@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace GurkBurk
+namespace GurkBurk.Internal
 {
     public class LineMatcher
     {
@@ -18,7 +18,7 @@ namespace GurkBurk
                                                    TokenWords = _.TokenWords.Select(TokenWordAsRegex(_)),
                                                })
                 .SelectMany(_ => _.TokenWords)
-                .Select(_ => new { TokenWord = _, Words = _.Where(c => c == ' ').Count() })
+                .Select(_ => new {TokenWord = _, Words = _.Where(c => c == ' ').Count()})
                 .OrderByDescending(_ => _.Words)
                 .Select(_ => _.TokenWord) //.Replace("|", @"\|"))
                 .ToArray();
@@ -38,7 +38,7 @@ namespace GurkBurk
             var match = regex.Match(line.Text);
             if (match.Success == false)
                 return null;
-            var keyword = match.Groups["keyword"].Value.Trim().TrimEnd(new[] { ':' });
+            var keyword = match.Groups["keyword"].Value.Trim().TrimEnd(new[] {':'});
             var lexer = lexerLookup[keyword];
             return new LineMatch(keyword, match.Groups["text"].Value.Trim(), line, lexer);
         }

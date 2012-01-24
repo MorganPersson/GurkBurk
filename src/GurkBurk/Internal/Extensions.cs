@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace GurkBurk
+namespace GurkBurk.Internal
 {
     public static class Extensions
     {

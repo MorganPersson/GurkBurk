@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace GurkBurk
+namespace GurkBurk.Internal
 {
     public class StepLexer : Lexer
     {
@@ -13,14 +13,21 @@ namespace GurkBurk
             this.listener = listener;
             children = new Lexer[]
                            {
-                               new RowLexer(this, lineEnumerator, listener, language), 
+                               new RowLexer(this, lineEnumerator, listener, language),
                                new CommentLexer(this, lineEnumerator, listener, language),
-                               new DocStringLexer(this,lineEnumerator, listener,language), 
+                               new DocStringLexer(this, lineEnumerator, listener, language),
                            };
         }
 
-        public override IEnumerable<string> TokenWords { get { return Language.Steps; } }
-        protected override IEnumerable<Lexer> Children { get { return children; } }
+        public override IEnumerable<string> TokenWords
+        {
+            get { return Language.Steps; }
+        }
+
+        protected override IEnumerable<Lexer> Children
+        {
+            get { return children; }
+        }
 
         protected override void HandleToken(LineMatch match)
         {

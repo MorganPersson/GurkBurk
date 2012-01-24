@@ -1,4 +1,4 @@
-using GurkBurk;
+using GurkBurk.Internal;
 using NUnit.Framework;
 
 namespace GurkBurkSpec
@@ -17,14 +17,14 @@ namespace GurkBurkSpec
         public void Should_have_multiple_words_for_same_type()
         {
             var l = new Language();
-            CollectionAssert.AreEqual(new[] { "Scenario Outline", "Scenario Template" }, l.ScenarioOutline);
+            CollectionAssert.AreEqual(new[] {"Scenario Outline", "Scenario Template"}, l.ScenarioOutline);
         }
 
         [Test]
         public void Should_put_all_steps_in_same_collection()
         {
             var l = new Language();
-            CollectionAssert.AreEqual(new[] { "Given", "When", "Then", "And", "But" }, l.Steps);
+            CollectionAssert.AreEqual(new[] {"Given", "When", "Then", "And", "But"}, l.Steps);
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace GurkBurkSpec
         {
             var l = new Language();
             l.UseLanguage("sv");
-            CollectionAssert.AreEqual(new[] { "Egenskap" }, l.Feature);            
+            CollectionAssert.AreEqual(new[] {"Egenskap"}, l.Feature);
         }
     }
 }

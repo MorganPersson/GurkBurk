@@ -32,7 +32,7 @@ namespace GurkBurk.Yml
             return root;
         }
 
-        IEnumerable<string> ReadAllRows(Stream stream)
+        private IEnumerable<string> ReadAllRows(Stream stream)
         {
             var sr = new StreamReader(stream);
             var rows = new List<string>();

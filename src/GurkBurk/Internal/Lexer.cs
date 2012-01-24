@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GurkBurk
+namespace GurkBurk.Internal
 {
     public abstract class Lexer
     {
@@ -10,7 +10,7 @@ namespace GurkBurk
         private LineMatcher lineMatcher;
         protected LineEnumerator LineEnumerator { get; private set; }
 
-        private readonly char[] whiteSpace = new[] { '\n', ' ', '\t' };
+        private readonly char[] whiteSpace = new[] {'\n', ' ', '\t'};
 
         protected Lexer(Lexer parent, LineEnumerator lineEnumerator, Language language)
         {
@@ -47,7 +47,7 @@ namespace GurkBurk
 
         private LineMatch ReadNextStep()
         {
-            var text = (LineEnumerator.Current.Text??"").Trim(whiteSpace);
+            var text = (LineEnumerator.Current.Text ?? "").Trim(whiteSpace);
             while (LineEnumerator.HasMore && string.IsNullOrEmpty(text))
             {
                 LineEnumerator.MoveToNext();
@@ -99,8 +99,16 @@ namespace GurkBurk
 
         public abstract IEnumerable<string> TokenWords { get; }
         protected abstract IEnumerable<Lexer> Children { get; }
-        protected virtual bool CanSpanMultipleLines { get { return true; } }
-        public virtual bool MustHaveSpaceOrKolonAfterToken { get { return true; } }
+
+        protected virtual bool CanSpanMultipleLines
+        {
+            get { return true; }
+        }
+
+        public virtual bool MustHaveSpaceOrKolonAfterToken
+        {
+            get { return true; }
+        }
 
         private LineMatcher LineMatcher
         {
@@ -146,7 +154,6 @@ namespace GurkBurk
                 var lexers = new Dictionary<Type, Lexer>();
                 BuildMatcherForAllLines(root.Children, lexers);
                 matchAllLines = new LineMatcher(lexers.Values);
-
             }
             return matchAllLines;
         }

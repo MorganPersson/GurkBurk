@@ -1,4 +1,5 @@
 using System.IO;
+using GurkBurk.Internal;
 
 namespace GurkBurk
 {

@@ -1,4 +1,4 @@
-namespace GurkBurk
+namespace GurkBurk.Internal
 {
     public class LineMatch
     {
@@ -12,7 +12,12 @@ namespace GurkBurk
 
         public ParsedLine ParsedLine { get; private set; }
         public Lexer Lexer { get; private set; }
-        public int Line { get { return ParsedLine.Line; } }
+
+        public int Line
+        {
+            get { return ParsedLine.Line; }
+        }
+
         public string Text { get; set; }
         public string Token { get; private set; }
     }

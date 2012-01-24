@@ -2,7 +2,8 @@ namespace GurkBurkSpec
 {
     public class TestData
     {
-        public const string AcceptanceTest = @"
+        public const string AcceptanceTest =
+            @"
 @tag1 @tag2
 Feature: foo
 	As a
@@ -18,6 +19,5 @@ When d
 Then e
   | x | y | z |
   | 1 | 2 | 3 |";
-
     }
 }

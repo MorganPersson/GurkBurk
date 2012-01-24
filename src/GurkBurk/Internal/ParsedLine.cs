@@ -1,4 +1,4 @@
-namespace GurkBurk
+namespace GurkBurk.Internal
 {
     public class ParsedLine
     {
@@ -7,6 +7,7 @@ namespace GurkBurk
             Text = text;
             Line = line;
         }
+
         public int Line { get; private set; }
         public string Text { get; private set; }
 
@@ -45,7 +46,7 @@ namespace GurkBurk
 
         public override string ToString()
         {
-            return string.Format("{1}:{0}", Text , Line);
+            return string.Format("{1}:{0}", Text, Line);
         }
     }
 }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace GurkBurk
+namespace GurkBurk.Internal
 {
     public class DocStringLexer : Lexer
     {
@@ -12,12 +12,28 @@ namespace GurkBurk
             this.listener = listener;
         }
 
-        public override IEnumerable<string> TokenWords { get { return new[] { "\"\"\"" }; } }
-        protected override IEnumerable<Lexer> Children { get { return new Lexer[0]; } }
-        protected override bool CanSpanMultipleLines { get { return false; } }
-        public override bool MustHaveSpaceOrKolonAfterToken { get { return false; } }
+        public override IEnumerable<string> TokenWords
+        {
+            get { return new[] {"\"\"\""}; }
+        }
 
-        const string DocString = "\"\"\"";
+        protected override IEnumerable<Lexer> Children
+        {
+            get { return new Lexer[0]; }
+        }
+
+        protected override bool CanSpanMultipleLines
+        {
+            get { return false; }
+        }
+
+        public override bool MustHaveSpaceOrKolonAfterToken
+        {
+            get { return false; }
+        }
+
+        private const string DocString = "\"\"\"";
+
         protected override void HandleToken(LineMatch match)
         {
             int line = match.Line;
@@ -29,7 +45,7 @@ namespace GurkBurk
                 text += "\n" + LineEnumerator.Current.Text;
                 atEnd = text.TrimEnd().EndsWith(DocString);
             }
-            listener.docString(text.TrimEnd(new[] { DocString[0] }), line);
+            listener.docString(text.TrimEnd(new[] {DocString[0]}), line);
         }
     }
 }

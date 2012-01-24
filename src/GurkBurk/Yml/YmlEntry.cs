@@ -7,7 +7,11 @@ namespace GurkBurk.Yml
     {
         public string Key { get; private set; }
         private readonly List<YmlEntry> _values = new List<YmlEntry>();
-        public ICollection<YmlEntry> Values { get { return _values; } }
+
+        public ICollection<YmlEntry> Values
+        {
+            get { return _values; }
+        }
 
         public YmlEntry this[string key]
         {

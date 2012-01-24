@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace GurkBurk
+namespace GurkBurk.Internal
 {
     public class ScenarioOutlineLexer : ScenarioLexer
     {
@@ -9,7 +9,10 @@ namespace GurkBurk
         {
         }
 
-        public override IEnumerable<string> TokenWords { get { return Language.ScenarioOutline; } }
+        public override IEnumerable<string> TokenWords
+        {
+            get { return Language.ScenarioOutline; }
+        }
 
         protected override void HandleToken(LineMatch match)
         {

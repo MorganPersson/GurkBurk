@@ -124,10 +124,10 @@ namespace GurkBurkSpec
             var args = listener.GetArgumentsForCallsMadeOn(_ => _.row(null, 0));
             listener.AssertWasCalled(_ => _.row(null, 0), opt => opt.IgnoreArguments().Repeat.Twice());
             //first row
-            CollectionAssert.AreEqual(new List<string> { "x", "y", "z" }, (List<string>)args[0][0]);
+            CollectionAssert.AreEqual(new List<string> {"x", "y", "z"}, (List<string>) args[0][0]);
             Assert.AreEqual(5, args[0][1]);
             // 2nd row
-            CollectionAssert.AreEqual(new List<string> { "a", "b", "c" }, (List<string>)args[1][0]);
+            CollectionAssert.AreEqual(new List<string> {"a", "b", "c"}, (List<string>) args[1][0]);
             Assert.AreEqual(6, args[1][1]);
         }
 
@@ -197,10 +197,10 @@ namespace GurkBurkSpec
 
             var args = listener.GetArgumentsForCallsMadeOn(_ => _.row(null, 0));
             //first row
-            CollectionAssert.AreEqual(new List<string> { "a", "b" }, (List<string>)args[0][0]);
+            CollectionAssert.AreEqual(new List<string> {"a", "b"}, (List<string>) args[0][0]);
             Assert.AreEqual(4, args[0][1]);
             // 2nd row
-            CollectionAssert.AreEqual(new List<string> { "1", "2" }, (List<string>)args[1][0]);
+            CollectionAssert.AreEqual(new List<string> {"1", "2"}, (List<string>) args[1][0]);
             Assert.AreEqual(5, args[1][1]);
         }
 
@@ -346,10 +346,10 @@ namespace GurkBurkSpec
 
             var args = listener.GetArgumentsForCallsMadeOn(_ => _.row(null, 0));
             //first row
-            CollectionAssert.AreEqual(new List<string> { "x", "y", "z" }, (List<string>)args[0][0]);
+            CollectionAssert.AreEqual(new List<string> {"x", "y", "z"}, (List<string>) args[0][0]);
             Assert.AreEqual(15, args[0][1]);
             // 2nd row
-            CollectionAssert.AreEqual(new List<string> { "1", "2", "3" }, (List<string>)args[1][0]);
+            CollectionAssert.AreEqual(new List<string> {"1", "2", "3"}, (List<string>) args[1][0]);
             Assert.AreEqual(16, args[1][1]);
         }
 

@@ -2,15 +2,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace GurkBurk
+namespace GurkBurk.Internal
 {
     public class LineEnumerator
     {
         private readonly ParsedLine[] lines;
         private int index = -1;
 
-        public bool HasMore { get { return index < lines.Length - 1; } }
-        public ParsedLine Current { get { return (index == -1 || index == lines.Length) ? new ParsedLine("", -1) : lines[index]; } }
+        public bool HasMore
+        {
+            get { return index < lines.Length - 1; }
+        }
+
+        public ParsedLine Current
+        {
+            get { return (index == -1 || index == lines.Length) ? new ParsedLine("", -1) : lines[index]; }
+        }
 
         public LineEnumerator(TextReader reader)
         {

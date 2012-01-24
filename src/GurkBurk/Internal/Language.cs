@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GurkBurk.Yml;
 
-namespace GurkBurk
+namespace GurkBurk.Internal
 {
     public class Language
     {
@@ -19,7 +19,8 @@ namespace GurkBurk
 
         public Language()
             : this("en")
-        { }
+        {
+        }
 
         public Language(string language)
         {
@@ -31,7 +32,7 @@ namespace GurkBurk
         {
             using (var r = GetType().Assembly.GetManifestResourceStream(GetType().Assembly.GetName().Name + ".i18n.yml"))
             {
-                var ymlParser = new Yml.YmlParser();
+                var ymlParser = new YmlParser();
                 languages = ymlParser.Parse(r);
             }
         }
@@ -50,7 +51,7 @@ namespace GurkBurk
             steps.AddRange(lang["then"].Values.Select(_ => _.Key));
             steps.AddRange(lang["and"].Values.Select(_ => _.Key));
             steps.AddRange(lang["but"].Values.Select(_ => _.Key));
-            Steps = steps.Select(_ => _.Trim(new[] { '"' })).Where(_ => _ != "*").ToArray();
+            Steps = steps.Select(_ => _.Trim(new[] {'"'})).Where(_ => _ != "*").ToArray();
 
             if (LanguageChanged != null)
                 LanguageChanged.Invoke(this, new EventArgs());

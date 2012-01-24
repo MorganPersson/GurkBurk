@@ -1,6 +1,7 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using GurkBurk;
+using GurkBurk.Internal;
 using NUnit.Framework;
 
 namespace GurkBurkSpec
@@ -30,7 +31,7 @@ namespace GurkBurkSpec
             stream.Seek(0, SeekOrigin.Begin);
             var obj = formatter.Deserialize(stream);
             Assert.IsNotNull(obj);
-            Assert.AreEqual(e.Message, ((LexerError)obj).Message);
+            Assert.AreEqual(e.Message, ((LexerError) obj).Message);
         }
     }
 }

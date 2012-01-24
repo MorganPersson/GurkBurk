@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using GurkBurk;
+using GurkBurk.Internal;
 using NUnit.Framework;
 
 namespace GurkBurkSpec
@@ -12,7 +12,7 @@ namespace GurkBurkSpec
         [SetUp]
         public void WordEnumerator()
         {
-            wordEnumerator = new LineEnumerator(new[] { new ParsedLine("a", 2), new ParsedLine("b", 3), new ParsedLine("c", 5), });
+            wordEnumerator = new LineEnumerator(new[] {new ParsedLine("a", 2), new ParsedLine("b", 3), new ParsedLine("c", 5),});
         }
 
         [Test]
@@ -23,7 +23,7 @@ namespace GurkBurkSpec
             wordEnumerator.MoveToNext();
             Assert.AreEqual("b", wordEnumerator.Current.Text);
 
-            var l = new List<string> { "a", "b", "C" };
+            var l = new List<string> {"a", "b", "C"};
             var e = l.GetEnumerator();
             var c = e.Current;
             e.MoveNext();
@@ -51,7 +51,6 @@ namespace GurkBurkSpec
             wordEnumerator.MoveToNext();
             Assert.AreEqual("c", wordEnumerator.Current.Text);
         }
-
 
         [Test]
         public void Should_return_null_when_moved_pass_end()
