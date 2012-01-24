@@ -50,5 +50,5 @@ task Test -depends Compile {
 }
 
 task NuGet -depends Compile {
-	Exec { .\tools\nuget\nuget.exe pack "$rootDir\GurkBurk.nuspec"  -Version $version -OutputDirectory $artifactsDir}
+	Exec { .\src\.nuget\nuget.exe pack "$rootDir\GurkBurk.nuspec"  -Version $version -OutputDirectory $artifactsDir}
 }
