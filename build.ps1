@@ -15,6 +15,7 @@ properties {
 
 task Clean { 
 	if ($true -eq (Test-Path "$buildDir")) {
+		Get-ChildItem $buildDir\**\*.* -Recurse | ForEach-Object { Remove-Item $_.FullName }
 		Remove-Item $buildDir -Recurse
 	}
 	New-Item $buildDir -type directory
@@ -37,7 +38,7 @@ task Version {
 task Init -depends Clean, Version
 
 task Compile -depends Init {
-	Exec { msbuild "$sourceDir\GurkBurk.sln" /p:Configuration=Automated-3.5 /v:m /p:TargetFrameworkVersion=v3.5 /toolsversion:3.5 /t:Rebuild }
+	Exec { msbuild "$sourceDir\GurkBurk.sln" /p:Configuration=Automated-3.5 /v:m /p:TargetFrameworkVersion=v3.5 /toolsversion:4.0 /t:Rebuild }
 	Exec { msbuild "$sourceDir\GurkBurk.sln" /p:Configuration=Automated-4.0 /v:m /p:TargetFrameworkVersion=v4.0 /toolsversion:4.0 /t:Rebuild }
 }
 
