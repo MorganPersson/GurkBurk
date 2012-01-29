@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using GurkBurk;
+using GurkBurk.Internal;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -19,6 +22,11 @@ namespace GurkBurkSpec
             lexer = new I18nLexer(listener);
         }
 
+        [TearDown]
+        public void Cleanup()
+        {
+            UriFactory.ResetToDefault();
+        }
         [Test]
         public void Should_parse_feature_title()
         {
@@ -124,10 +132,10 @@ namespace GurkBurkSpec
             var args = listener.GetArgumentsForCallsMadeOn(_ => _.row(null, 0));
             listener.AssertWasCalled(_ => _.row(null, 0), opt => opt.IgnoreArguments().Repeat.Twice());
             //first row
-            CollectionAssert.AreEqual(new List<string> {"x", "y", "z"}, (List<string>) args[0][0]);
+            CollectionAssert.AreEqual(new List<string> { "x", "y", "z" }, (List<string>)args[0][0]);
             Assert.AreEqual(5, args[0][1]);
             // 2nd row
-            CollectionAssert.AreEqual(new List<string> {"a", "b", "c"}, (List<string>) args[1][0]);
+            CollectionAssert.AreEqual(new List<string> { "a", "b", "c" }, (List<string>)args[1][0]);
             Assert.AreEqual(6, args[1][1]);
         }
 
@@ -146,6 +154,34 @@ namespace GurkBurkSpec
         {
             const string words = "Feature: foo\nScenario: bar\nGiven a\nExamples:";
             Assert.Throws<LexerError>(() => lexer.scan(words));
+        }
+
+        [Test]
+        public void Should_be_able_to_load_table_data_from_external_uri()
+        {
+            const string words = "Feature: foo\nScenario: bar\nGiven a\nExamples:\n  file:///z:/foo/bar.txt";
+            UriFactory.fileReader = f =>
+                                        {
+                                            var ms = new MemoryStream();
+                                            const string content = "|x|y|z|\n|a|b|c|";
+                                            var fw = new StreamWriter(ms);
+                                            fw.Write(content);
+                                            fw.Flush();
+                                            ms.Seek(0, 0);
+                                            return new StreamReader(ms);
+                                        };
+
+            lexer.scan(words);
+
+            listener.AssertWasCalled(_ => _.examples("Examples", "", "", 4));
+            var args = listener.GetArgumentsForCallsMadeOn(_ => _.row(null, 0));
+            listener.AssertWasCalled(_ => _.row(null, 0), opt => opt.IgnoreArguments().Repeat.Twice());
+            //first row
+            CollectionAssert.AreEqual(new List<string> { "x", "y", "z" }, (List<string>)args[0][0]);
+            Assert.AreEqual(5, args[0][1]);
+            // 2nd row
+            CollectionAssert.AreEqual(new List<string> { "a", "b", "c" }, (List<string>)args[1][0]);
+            Assert.AreEqual(5, args[1][1]);
         }
 
         [TestCase("Given")]
@@ -197,10 +233,10 @@ namespace GurkBurkSpec
 
             var args = listener.GetArgumentsForCallsMadeOn(_ => _.row(null, 0));
             //first row
-            CollectionAssert.AreEqual(new List<string> {"a", "b"}, (List<string>) args[0][0]);
+            CollectionAssert.AreEqual(new List<string> { "a", "b" }, (List<string>)args[0][0]);
             Assert.AreEqual(4, args[0][1]);
             // 2nd row
-            CollectionAssert.AreEqual(new List<string> {"1", "2"}, (List<string>) args[1][0]);
+            CollectionAssert.AreEqual(new List<string> { "1", "2" }, (List<string>)args[1][0]);
             Assert.AreEqual(5, args[1][1]);
         }
 
@@ -346,10 +382,10 @@ namespace GurkBurkSpec
 
             var args = listener.GetArgumentsForCallsMadeOn(_ => _.row(null, 0));
             //first row
-            CollectionAssert.AreEqual(new List<string> {"x", "y", "z"}, (List<string>) args[0][0]);
+            CollectionAssert.AreEqual(new List<string> { "x", "y", "z" }, (List<string>)args[0][0]);
             Assert.AreEqual(15, args[0][1]);
             // 2nd row
-            CollectionAssert.AreEqual(new List<string> {"1", "2", "3"}, (List<string>) args[1][0]);
+            CollectionAssert.AreEqual(new List<string> { "1", "2", "3" }, (List<string>)args[1][0]);
             Assert.AreEqual(16, args[1][1]);
         }
 

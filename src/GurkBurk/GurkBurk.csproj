@@ -65,8 +65,10 @@
     <Compile Include="Internal\Extensions.cs" />
     <Compile Include="Internal\FeatureLexer.cs" />
     <Compile Include="I18NLexer.cs" />
+    <Compile Include="Internal\UriLexer.cs" />
     <Compile Include="Internal\Language.cs" />
     <Compile Include="Internal\Lexer.cs" />
+    <Compile Include="Internal\UriFactory.cs" />
     <Compile Include="LexerError.cs" />
     <Compile Include="Internal\LineEnumerator.cs" />
     <Compile Include="Internal\LineMatch.cs" />

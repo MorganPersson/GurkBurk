@@ -14,7 +14,8 @@ namespace GurkBurk.Internal
             children = new Lexer[]
                            {
                                new RowLexer(this, lineEnumerator, listener, language),
-                               new CommentLexer(this, lineEnumerator, listener, language)
+                               new CommentLexer(this, lineEnumerator, listener, language),
+                               new UriLexer(this, lineEnumerator, listener, language)
                            };
         }
 

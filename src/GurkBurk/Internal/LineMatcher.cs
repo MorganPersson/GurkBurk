@@ -1,59 +1,38 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace GurkBurk.Internal
 {
     public class LineMatcher
     {
-        private readonly Dictionary<string, Lexer> lexerLookup;
-        private readonly Regex regex;
+        private class LexerForTokenWord
+        {
+            public Lexer Lexer { get; private set; }
+            public string TokenWord { get; private set; }
+
+            public LexerForTokenWord(Lexer lexer, string tokenWord)
+            {
+                Lexer = lexer;
+                TokenWord = tokenWord;
+            }
+        }
+
+        private readonly List<LexerForTokenWord> lexers;
 
         public LineMatcher(IEnumerable<Lexer> lexers)
         {
-            lexerLookup = BuildLexerLookUp(lexers);
-            var words = lexers.Select(_ => new
-                                               {
-                                                   TokenWords = _.TokenWords.Select(TokenWordAsRegex(_)),
-                                               })
-                .SelectMany(_ => _.TokenWords)
-                .Select(_ => new {TokenWord = _, Words = _.Where(c => c == ' ').Count()})
-                .OrderByDescending(_ => _.Words)
-                .Select(_ => _.TokenWord) //.Replace("|", @"\|"))
-                .ToArray();
-            string allWords = "(" + string.Join(")|(", words) + ")";
-            regex = new Regex(string.Format(LineMatch, allWords));
+            this.lexers = lexers.SelectMany(l => l.TokenWords, (l, t) => new LexerForTokenWord(l, t)).OrderByDescending(_ => _.TokenWord.Length).ToList();
         }
-
-        private static Func<string, string> TokenWordAsRegex(Lexer lexer)
-        {
-            return t => t.Replace("|", @"\|") + (lexer.MustHaveSpaceOrKolonAfterToken ? @"(\s|:)" : "");
-        }
-
-        private const string LineMatch = @"\s*(?<keyword>{0})(?<text>.*)";
 
         public LineMatch Match(ParsedLine line)
         {
-            var match = regex.Match(line.Text);
-            if (match.Success == false)
-                return null;
-            var keyword = match.Groups["keyword"].Value.Trim().TrimEnd(new[] {':'});
-            var lexer = lexerLookup[keyword];
-            return new LineMatch(keyword, match.Groups["text"].Value.Trim(), line, lexer);
-        }
-
-        private static Dictionary<string, Lexer> BuildLexerLookUp(IEnumerable<Lexer> lexers)
-        {
-            var d = new Dictionary<string, Lexer>();
-            foreach (var lexer in lexers)
-            {
-                foreach (var tokenWord in lexer.TokenWords)
-                {
-                    d.Add(tokenWord, lexer);
-                }
-            }
-            return d;
+            LineMatch match = null;
+            lexers.FirstOrDefault(_ =>
+                                      {
+                                          match = _.Lexer.Match(line);
+                                          return match != null;
+                                      });
+            return match;
         }
     }
 }

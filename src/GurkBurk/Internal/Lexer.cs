@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace GurkBurk.Internal
 {
@@ -9,8 +10,9 @@ namespace GurkBurk.Internal
         protected Language Language { get; private set; }
         private LineMatcher lineMatcher;
         protected LineEnumerator LineEnumerator { get; private set; }
+        private Regex regex;
 
-        private readonly char[] whiteSpace = new[] {'\n', ' ', '\t'};
+        protected readonly char[] WhiteSpace = new[] { '\n', ' ', '\t' };
 
         protected Lexer(Lexer parent, LineEnumerator lineEnumerator, Language language)
         {
@@ -19,9 +21,26 @@ namespace GurkBurk.Internal
             Language = language;
             //TODO: Should probably unsubscribe to event at some point
             Language.LanguageChanged += ChangeLanguage;
+            SetupRegex();
         }
 
+        public abstract IEnumerable<string> TokenWords { get; }
+        protected abstract IEnumerable<Lexer> Children { get; }
         protected abstract void HandleToken(LineMatch match);
+
+        public virtual bool MustHaveSpaceOrKolonAfterToken
+        {
+            get { return true; }
+        }
+
+        public virtual LineMatch Match(ParsedLine line)
+        {
+            var match = regex.Match(line.Text);
+            if (match.Success == false)
+                return null;
+            var keyword = match.Groups["keyword"].Value.Trim().TrimEnd(new[] { ':' });
+            return new LineMatch(keyword, match.Groups["text"].Value.Trim(), line, this);
+        }
 
         public void Parse()
         {
@@ -38,6 +57,16 @@ namespace GurkBurk.Internal
             } while (continueToParse && lineMatch != null);
         }
 
+        protected virtual bool CanSpanMultipleLines
+        {
+            get { return true; }
+        }
+
+        protected void UseLanguage(string language)
+        {
+            Language.UseLanguage(language);
+        }
+
         private void Parse(LineMatch lineMatch)
         {
             lineMatch.Lexer.HandleToken(lineMatch);
@@ -47,11 +76,11 @@ namespace GurkBurk.Internal
 
         private LineMatch ReadNextStep()
         {
-            var text = (LineEnumerator.Current.Text ?? "").Trim(whiteSpace);
+            var text = (LineEnumerator.Current.Text ?? "").Trim(WhiteSpace);
             while (LineEnumerator.HasMore && string.IsNullOrEmpty(text))
             {
                 LineEnumerator.MoveToNext();
-                text = (LineEnumerator.Current.Text ?? "").Trim(whiteSpace);
+                text = (LineEnumerator.Current.Text ?? "").Trim(WhiteSpace);
             }
             LineMatch lineMatch = Children.Any() ? LineMatcher.Match(LineEnumerator.Current) : null;
             if (lineMatch == null)
@@ -95,19 +124,7 @@ namespace GurkBurk.Internal
         private void ChangeLanguage(object sender, EventArgs args)
         {
             CreateLineMatcher();
-        }
-
-        public abstract IEnumerable<string> TokenWords { get; }
-        protected abstract IEnumerable<Lexer> Children { get; }
-
-        protected virtual bool CanSpanMultipleLines
-        {
-            get { return true; }
-        }
-
-        public virtual bool MustHaveSpaceOrKolonAfterToken
-        {
-            get { return true; }
+            SetupRegex();
         }
 
         private LineMatcher LineMatcher
@@ -140,12 +157,13 @@ namespace GurkBurk.Internal
                     LineEnumerator.MoveToPrevious();
             }
 
-            return stepText.TrimEnd(whiteSpace);
+            return stepText.TrimEnd(WhiteSpace);
         }
 
         private LineMatcher matchAllLines;
         private readonly Lexer parent;
 
+        //Is this obsolete now?
         private LineMatcher BuildMatcherForAllLines()
         {
             if (matchAllLines == null)
@@ -178,9 +196,13 @@ namespace GurkBurk.Internal
             }
         }
 
-        protected void UseLanguage(string language)
+        private const string LineMatch = @"\s*(?<keyword>{0})(?<text>.*)";
+
+        private void SetupRegex()
         {
-            Language.UseLanguage(language);
+            var words = TokenWords.Select(t => t.Replace("|", @"\|") + (MustHaveSpaceOrKolonAfterToken ? @"(\s|:)" : "")).ToArray();
+            string allWords = "(" + string.Join(")|(", words) + ")";
+            regex = new Regex(string.Format(LineMatch, allWords));
         }
     }
 }
