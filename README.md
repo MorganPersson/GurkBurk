@@ -1,6 +1,6 @@
-A parser for the Gherkin language.
+### A parser for the Gherkin language.
 
-## Note on Patches/Pull Requests
+#### Note on Patches/Pull Requests
  
 * Fork the project.
 * Make your feature addition or bug fix.
@@ -8,5 +8,6 @@ A parser for the Gherkin language.
 * Commit
 * Send me a pull request.
 
-## Copyright
+
+##### Copyright
 Copyright (c) 2012 Morgan Persson
