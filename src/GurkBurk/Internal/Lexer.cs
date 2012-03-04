@@ -196,7 +196,7 @@ namespace GurkBurk.Internal
             }
         }
 
-        private const string LineMatch = @"\s*(?<keyword>{0})(?<text>.*)";
+        private const string LineMatch = @"^\s*(?<keyword>{0})(?<text>.*)";
 
         private void SetupRegex()
         {
