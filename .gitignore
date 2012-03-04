@@ -5,6 +5,7 @@ _ReSharper.*
 *.ReSharper.*
 *.user
 *.cache
-*.crunchsolution.local.xml
+*.ncrunchsolution
+*.ncrunchproject
 bin
 obj
