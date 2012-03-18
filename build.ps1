@@ -38,8 +38,8 @@ task Version {
 task Init -depends Clean, Version
 
 task Compile -depends Init {
-	Exec { msbuild "$sourceDir\GurkBurk.sln" /p:Configuration=Automated-3.5 /v:m /p:TargetFrameworkVersion=v3.5 /toolsversion:4.0 /t:Rebuild }
-	Exec { msbuild "$sourceDir\GurkBurk.sln" /p:Configuration=Automated-4.0 /v:m /p:TargetFrameworkVersion=v4.0 /toolsversion:4.0 /t:Rebuild }
+	Exec { msbuild "$sourceDir\GurkBurk.sln" /p:Configuration=Automated-3.5 /v:m /m /p:TargetFrameworkVersion=v3.5 /toolsversion:4.0 /t:Rebuild }
+	Exec { msbuild "$sourceDir\GurkBurk.sln" /p:Configuration=Automated-4.0 /v:m /m /p:TargetFrameworkVersion=v4.0 /toolsversion:4.0 /t:Rebuild }
 }
 
 task Test -depends Compile {
