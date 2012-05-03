@@ -35,6 +35,7 @@ namespace GurkBurk.Internal
         {
             var newLine = match.Text.IndexOf("\n");
             string title = (newLine < 0) ? match.Text : match.Text.Substring(0, newLine);
+            title = title.TrimEnd(new[] {'\r', ' ', '\t'});
             string narrative = (newLine < 0) ? "" : match.Text.Substring(newLine).TrimStart(new[] {'\n'});
             listener.feature(match.Token, title, narrative, match.Line);
         }

@@ -14,7 +14,7 @@ namespace GurkBurk.Internal
 
         public override IEnumerable<string> TokenWords
         {
-            get { return new[] {"\"\"\""}; }
+            get { return new[] { "\"\"\"" }; }
         }
 
         protected override IEnumerable<Lexer> Children
@@ -38,14 +38,30 @@ namespace GurkBurk.Internal
         {
             int line = match.Line;
             string text = match.Text;
+            int spacesToTrim = match.ParsedLine.Text.IndexOf("\"\"\"", System.StringComparison.Ordinal);
+
+            bool skipNewline = text == string.Empty;
             bool atEnd = text.Trim().Length > 3 && text.Trim().EndsWith(DocString);
             while (!atEnd && LineEnumerator.HasMore)
             {
                 LineEnumerator.MoveToNext();
-                text += "\n" + LineEnumerator.Current.Text;
-                atEnd = text.TrimEnd().EndsWith(DocString);
+                var lineText = LineEnumerator.Current.Text;
+                atEnd = lineText.TrimEnd().EndsWith(DocString);
+                if (!atEnd)
+                    text += (skipNewline ? TrimSpaces(lineText, spacesToTrim) : LineEnumerator.Current.LineEnd + TrimSpaces(lineText, spacesToTrim));
+                skipNewline = false;
             }
-            listener.docString(text.TrimEnd(new[] {DocString[0]}), line);
+            string trimEnd = text.TrimEnd(new[] { DocString[0] });
+            listener.docString(trimEnd, line);
+        }
+
+        private string TrimSpaces(string text, int spacesToTrim)
+        {
+            var a = text.Substring(0, spacesToTrim);
+            var b = text.Substring(spacesToTrim);
+            if (a.Trim() == string.Empty)
+                return b;
+            return text.TrimStart();
         }
     }
 }

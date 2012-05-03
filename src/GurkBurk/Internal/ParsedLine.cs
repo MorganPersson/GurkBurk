@@ -2,14 +2,16 @@ namespace GurkBurk.Internal
 {
     public class ParsedLine
     {
-        public ParsedLine(string text, int line)
+        public ParsedLine(string text, string lineEnd, int line)
         {
             Text = text;
             Line = line;
+            LineEnd = lineEnd;
         }
 
         public int Line { get; private set; }
         public string Text { get; private set; }
+        public string LineEnd { get; private set; }
 
         public bool Equals(ParsedLine other)
         {

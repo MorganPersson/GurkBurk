@@ -12,7 +12,7 @@ namespace GurkBurk.Internal
         protected LineEnumerator LineEnumerator { get; private set; }
         private Regex regex;
 
-        protected readonly char[] WhiteSpace = new[] { '\n', ' ', '\t' };
+        protected readonly char[] WhiteSpace = new[] { '\n', ' ', '\r', '\t' };
 
         protected Lexer(Lexer parent, LineEnumerator lineEnumerator, Language language)
         {
@@ -90,14 +90,14 @@ namespace GurkBurk.Internal
             return lineMatch;
         }
 
-        private void ReadMultiLineStep(Lexer parent, LineMatch lineMatch)
+        private void ReadMultiLineStep(Lexer parentLexer, LineMatch lineMatch)
         {
             if (CanSpanMultipleLines
-                && NextLineIsStep(parent) == false
+                && NextLineIsStep(parentLexer) == false
                 && NextLineIsChildStep(lineMatch) == false)
             {
                 string moreTitle = GetStepText();
-                lineMatch.Text = (string.IsNullOrEmpty(moreTitle)) ? lineMatch.Text : lineMatch.Text + "\n" + moreTitle;
+                lineMatch.Text = (string.IsNullOrEmpty(moreTitle)) ? lineMatch.Text : lineMatch.Text + lineMatch.ParsedLine.LineEnd + moreTitle;
             }
         }
 
@@ -152,7 +152,7 @@ namespace GurkBurk.Internal
                 LineEnumerator.MoveToNext();
                 nextMatch = matcher.Match(LineEnumerator.Current);
                 if (nextMatch == null)
-                    stepText += LineEnumerator.Current.Text + "\n";
+                    stepText += LineEnumerator.Current.Text + LineEnumerator.Current.LineEnd;
                 else
                     LineEnumerator.MoveToPrevious();
             }

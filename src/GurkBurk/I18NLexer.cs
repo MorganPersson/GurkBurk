@@ -24,7 +24,7 @@ namespace GurkBurk
             lineEnumerator.MoveToNext();
             s.Parse();
             if ((lineEnumerator.HasMore || (string.IsNullOrEmpty(lineEnumerator.Current.Text) == false)))
-                throw new LexerError(new ParsedLine(lineEnumerator.Current.Text, lineEnumerator.Current.Line));
+                throw new LexerError(new ParsedLine(lineEnumerator.Current.Text, "", lineEnumerator.Current.Line));
             listener.eof();
         }
     }

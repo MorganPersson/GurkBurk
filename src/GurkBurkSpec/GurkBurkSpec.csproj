@@ -61,6 +61,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DummyListener.cs" />
     <Compile Include="I18NLexerSpec.cs" />
     <Compile Include="LanguageSpec.cs" />
     <Compile Include="LexerErrorSpec.cs" />

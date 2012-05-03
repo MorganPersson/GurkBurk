@@ -337,13 +337,13 @@ namespace GurkBurkSpec
         [Test]
         public void Should_handle_docstring_over_multiple_lines()
         {
-            const string words = "Feature: foo\nScenario: bar\nGiven  a\n\"\"\"this\n spans \n multiple lines\n\"\"\"\nWhen b";
+            const string words = "Feature: foo\nScenario: bar\nGiven  a\n   \"\"\"\nthis\n    spans \n    multiple lines\n\"\"\"\nWhen b";
             lexer.scan(words);
             listener.AssertWasCalled(_ => _.feature("Feature", "foo", "", 1));
             listener.AssertWasCalled(_ => _.scenario("Scenario", "bar", "", 2));
             listener.AssertWasCalled(_ => _.step("Given", "a", 3));
-            listener.AssertWasCalled(_ => _.docString("this\n spans \n multiple lines\n", 4));
-            listener.AssertWasCalled(_ => _.step("When", "b", 8));
+            listener.AssertWasCalled(_ => _.docString("this\n spans \n multiple lines", 4));
+            listener.AssertWasCalled(_ => _.step("When", "b", 9));
         }
 
         [Test]
@@ -367,9 +367,17 @@ namespace GurkBurkSpec
         }
 
         [Test]
+        public void Should_keep_line_feed_and_carriage_return_intact_in_step()
+        {
+            const string words = "Feature: foo  \nScenario: bar  \nGiven  foo\r\nbar\r\nbaz";
+            lexer.scan(words);
+            listener.AssertWasCalled(_ => _.step("Given", "foo\r\nbar\r\nbaz", 3));
+        }
+
+        [Test]
         public void AcceptanceTest_Feature_and_scenario_with_tags()
         {
-            const string words = TestData.AcceptanceTest;
+            string words = TestData.AcceptanceTest.Replace("\r\n", "\n");
             lexer.scan(words);
             listener.AssertWasCalled(_ => _.tag("@tag1", 2));
             listener.AssertWasCalled(_ => _.tag("@tag2", 2));
@@ -392,6 +400,8 @@ namespace GurkBurkSpec
         [Test, Explicit]
         public void PerformanceTest()
         {
+            listener = new DummyListener();
+            lexer = new I18nLexer(listener);
             //simple perf test, runs around 390ms om my machine.
             const string words = TestData.AcceptanceTest;
             lexer.scan(words);

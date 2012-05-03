@@ -24,7 +24,7 @@ namespace GurkBurk.Internal
                 {
                     var text = reader.ReadLine().Trim(WhiteSpace);
                     if (!string.IsNullOrEmpty(text))
-                        base.HandleToken(new LineMatch(match.Token, text, new ParsedLine(text, match.Line), this));
+                        base.HandleToken(new LineMatch(match.Token, text, new ParsedLine(text, "\n", match.Line), this));
                 }
             }
         }

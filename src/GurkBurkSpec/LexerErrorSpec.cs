@@ -12,7 +12,7 @@ namespace GurkBurkSpec
         [Test]
         public void Should_be_able_to_serialize_exception()
         {
-            var e = new LexerError(new ParsedLine("Fooo !!", 1));
+            var e = new LexerError(new ParsedLine("Fooo !!", "\n", 1));
             var formatter = new BinaryFormatter();
             Stream stream = new MemoryStream();
             formatter.Serialize(stream, e);
@@ -23,7 +23,7 @@ namespace GurkBurkSpec
         [Test]
         public void Should_be_able_to_Deserialize_exception()
         {
-            var e = new LexerError(new ParsedLine("Fooo !!", 1));
+            var e = new LexerError(new ParsedLine("Fooo !!", "\n", 1));
             var formatter = new BinaryFormatter();
             Stream stream = new MemoryStream();
             formatter.Serialize(stream, e);
@@ -31,7 +31,7 @@ namespace GurkBurkSpec
             stream.Seek(0, SeekOrigin.Begin);
             var obj = formatter.Deserialize(stream);
             Assert.IsNotNull(obj);
-            Assert.AreEqual(e.Message, ((LexerError) obj).Message);
+            Assert.AreEqual(e.Message, ((LexerError)obj).Message);
         }
     }
 }

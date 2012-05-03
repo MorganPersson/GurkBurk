@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace GurkBurk.Internal
 {
@@ -16,22 +17,36 @@ namespace GurkBurk.Internal
 
         public ParsedLine Current
         {
-            get { return (index == -1 || index == lines.Length) ? new ParsedLine("", -1) : lines[index]; }
+            get { return (index == -1 || index == lines.Length) ? new ParsedLine("", "", -1) : lines[index]; }
         }
 
         public LineEnumerator(TextReader reader)
         {
             var lines = new List<ParsedLine>();
-            string text = "";
+            var whiteSpace = new[] { '\n', ' ', '\r', '\t' };
+            var content = reader.ReadToEnd().TrimEnd(whiteSpace);
             int line = 1;
-            while (text != null)
+            while (content.Length > 0)
             {
-                text = reader.ReadLine();
-                if (text != null)
-                    lines.Add(new ParsedLine(text, line));
+                string text = ReadLine(content);
+                content = content.Remove(0, text.Length);
+                var trimmedText = text.TrimEnd(new[] { '\n', '\r' });
+                var lineEnd = text.Substring(trimmedText.Length);
+                if (trimmedText != string.Empty)
+                    lines.Add(new ParsedLine(trimmedText, lineEnd, line));
                 line++;
             }
             this.lines = lines.ToArray();
+        }
+
+        private string ReadLine(string content)
+        {
+            var idx = content.IndexOf('\n') + 1;
+            if (idx == 0)
+                return content;
+            if (idx < content.Length && content[idx] == '\r')
+                idx++;
+            return content.Substring(0, idx);
         }
 
         public LineEnumerator(IEnumerable<ParsedLine> lines)
