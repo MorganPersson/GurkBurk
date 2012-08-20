@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using GurkBurk;
 using GurkBurk.Internal;
 using NUnit.Framework;
@@ -320,6 +319,14 @@ namespace GurkBurkSpec
             listener.AssertWasCalled(_ => _.feature("Egenskap", "foo", "", 2));
             listener.AssertWasCalled(_ => _.scenario("Scenario", "bar", "", 3));
             listener.AssertWasCalled(_ => _.step("Givet", "a", 4));
+        }
+
+        [Test]
+        public void Should_raise__LexerError_if_invalid_language_detected()
+        {
+            const string words = "  # language: xx-yy\nEgenskap: foo\nScenario: bar\nGivet a";
+            var ex = Assert.Throws<LexerError>(() => lexer.scan(words));
+            Assert.AreEqual("Unknown language 'xx-yy' at line 1", ex.Message);
         }
 
         [Test]

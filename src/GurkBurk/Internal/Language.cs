@@ -37,6 +37,11 @@ namespace GurkBurk.Internal
             }
         }
 
+        public bool HasLanguage(string language)
+        {
+            return languages.Values.Any(_ => _.Key == language);
+        }
+
         public void UseLanguage(string language)
         {
             var lang = languages[language];

@@ -9,12 +9,14 @@ namespace GurkBurk
     {
         public LexerError(SerializationInfo info, StreamingContext ctx)
             : base(info, ctx)
-        {
-        }
+        { }
 
         public LexerError(ParsedLine currentWord)
             : base(string.Format("Error parsing line {0} on line '{1}'", currentWord.Line, currentWord.Text))
-        {
-        }
+        { }
+
+        public LexerError(string message)
+            : base(message)
+        { }
     }
 }

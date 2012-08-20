@@ -5,7 +5,7 @@ namespace GurkBurk.Internal
 {
     public class CommentLexer : Lexer
     {
-        private readonly Regex isLanguage = new Regex(@"language\s*(:|\s)\s*(?<language>[a-zA-Z\-]+)", RegexOptions.Compiled);
+        private readonly Regex language = new Regex(@"language\s*(:|\s)\s*(?<language>[a-zA-Z\-]+)", RegexOptions.Compiled);
         private readonly Listener listener;
 
         public CommentLexer(Lexer parent, LineEnumerator lineEnumerator, Listener listener, Language language)
@@ -16,7 +16,7 @@ namespace GurkBurk.Internal
 
         public override IEnumerable<string> TokenWords
         {
-            get { return new[] {"#"}; }
+            get { return new[] { "#" }; }
         }
 
         protected override IEnumerable<Lexer> Children
@@ -38,23 +38,41 @@ namespace GurkBurk.Internal
         {
             string text = match.ParsedLine.Text;
             if (IsLanguageComment(text))
-                ChangeLanguage(text);
+            {
+                var languageString = ExtractLanguage(text);
+                if (Language.HasLanguage(languageString))
+                    ChangeLanguage(text);
+                else
+                {
+                    throw new LexerError(string.Format("Unknown language '{0}' at line {1}", languageString, match.Line));
+                }
+            }
 
             listener.comment(match.Text, match.Line);
         }
 
         private void ChangeLanguage(string comment)
         {
-            if (isLanguage.IsMatch(comment))
+            if (language.IsMatch(comment))
             {
-                var language = isLanguage.Match(comment).Groups["language"].Value;
-                UseLanguage(language);
+                var languageString = ExtractLanguage(comment);
+                UseLanguage(languageString);
             }
+        }
+
+        private string ExtractLanguage(string comment)
+        {
+            return language.Match(comment).Groups["language"].Value;
+        }
+
+        protected void UseLanguage(string language)
+        {
+            Language.UseLanguage(language);
         }
 
         private bool IsLanguageComment(string comment)
         {
-            return isLanguage.IsMatch(comment);
+            return language.IsMatch(comment);
         }
     }
 }

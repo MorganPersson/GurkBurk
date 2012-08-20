@@ -62,11 +62,6 @@ namespace GurkBurk.Internal
             get { return true; }
         }
 
-        protected void UseLanguage(string language)
-        {
-            Language.UseLanguage(language);
-        }
-
         private void Parse(LineMatch lineMatch)
         {
             lineMatch.Lexer.HandleToken(lineMatch);
