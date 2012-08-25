@@ -326,7 +326,7 @@ namespace GurkBurkSpec
         {
             const string words = "  # language: xx-yy\nEgenskap: foo\nScenario: bar\nGivet a";
             var ex = Assert.Throws<LexerError>(() => lexer.scan(words));
-            Assert.AreEqual("Line 1. Unknown language 'xx-yy'", ex.Message);
+            Assert.AreEqual("Line: 1. Unknown language 'xx-yy'", ex.Message);
         }
 
         [Test]
