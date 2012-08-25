@@ -12,7 +12,7 @@ namespace GurkBurk
         { }
 
         public LexerError(ParsedLine currentWord)
-            : base(string.Format("Error parsing line {0} on line '{1}'", currentWord.Line, currentWord.Text))
+            : base(string.Format("Line: {0}. Failed to parse '{1}'", currentWord.Line, currentWord.Text))
         { }
 
         public LexerError(string message)

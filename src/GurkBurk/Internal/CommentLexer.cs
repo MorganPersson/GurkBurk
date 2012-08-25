@@ -43,9 +43,7 @@ namespace GurkBurk.Internal
                 if (Language.HasLanguage(languageString))
                     ChangeLanguage(text);
                 else
-                {
-                    throw new LexerError(string.Format("Unknown language '{0}' at line {1}", languageString, match.Line));
-                }
+                    throw new LexerError(string.Format("Line {1}. Unknown language '{0}'", languageString, match.Line));
             }
 
             listener.comment(match.Text, match.Line);

@@ -326,7 +326,7 @@ namespace GurkBurkSpec
         {
             const string words = "  # language: xx-yy\nEgenskap: foo\nScenario: bar\nGivet a";
             var ex = Assert.Throws<LexerError>(() => lexer.scan(words));
-            Assert.AreEqual("Unknown language 'xx-yy' at line 1", ex.Message);
+            Assert.AreEqual("Line 1. Unknown language 'xx-yy'", ex.Message);
         }
 
         [Test]
@@ -380,6 +380,19 @@ namespace GurkBurkSpec
             lexer.scan(words);
             listener.AssertWasCalled(_ => _.step("Given", "foo\r\nbar\r\nbaz", 3));
         }
+
+
+        [Test]
+        public void Should_throw_LexerError_when_unparsable_row_found()
+        {
+            const string words = "Feature: foo\n# comment\nthis will throw\nScenario: bar";
+            var ex = Assert.Throws<LexerError>(() => lexer.scan(words));
+            Assert.AreEqual("Line: 3. Failed to parse 'this will throw'", ex.Message);
+            listener.AssertWasCalled(_ => _.feature("Feature", "foo", "", 1));
+            listener.AssertWasCalled(_ => _.comment("comment", 2));
+            listener.AssertWasNotCalled(_ => _.scenario("Scenario", "bar", "", 4));
+        }
+
 
         [Test]
         public void AcceptanceTest_Feature_and_scenario_with_tags()
