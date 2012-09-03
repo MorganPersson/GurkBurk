@@ -4,9 +4,9 @@ namespace GurkBurk.Internal
 {
     public class DocStringLexer : Lexer
     {
-        private readonly Listener listener;
+        private readonly IListener listener;
 
-        public DocStringLexer(Lexer parent, LineEnumerator lineEnumerator, Listener listener, Language language)
+        public DocStringLexer(Lexer parent, LineEnumerator lineEnumerator, IListener listener, Language language)
             : base(parent, lineEnumerator, language)
         {
             this.listener = listener;
@@ -52,7 +52,7 @@ namespace GurkBurk.Internal
                 skipNewline = false;
             }
             string trimEnd = text.TrimEnd(new[] { DocString[0] });
-            listener.docString(trimEnd, line);
+            listener.DocString(trimEnd, line);
         }
 
         private string TrimSpaces(string text, int spacesToTrim)

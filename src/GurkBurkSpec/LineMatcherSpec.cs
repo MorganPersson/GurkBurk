@@ -11,7 +11,7 @@ namespace GurkBurkSpec
         [Test]
         public void Should_not_match_if_token_in_middle_of_string()
         {
-            var listener = MockRepository.GenerateMock<Listener>();
+            var listener = MockRepository.GenerateMock<IListener>();
             var parsedLine = new ParsedLine("Given R#", "\n", 1);
             var commentLexer = new CommentLexer(null, new LineEnumerator(new[] { parsedLine }), listener, new Language("en"));
             var match = commentLexer.Match(parsedLine);

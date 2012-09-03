@@ -5,9 +5,9 @@ namespace GurkBurk.Internal
     public class ScenarioLexer : Lexer
     {
         private readonly Lexer[] children;
-        protected readonly Listener Listener;
+        protected readonly IListener Listener;
 
-        public ScenarioLexer(Lexer parent, LineEnumerator lineEnumerator, Listener listener, Language language)
+        public ScenarioLexer(Lexer parent, LineEnumerator lineEnumerator, IListener listener, Language language)
             : base(parent, lineEnumerator, language)
         {
             Listener = listener;
@@ -32,7 +32,7 @@ namespace GurkBurk.Internal
 
         protected override void HandleToken(LineMatch match)
         {
-            Listener.scenario(match.Token, match.Text, string.Empty, match.Line);
+            Listener.Scenario(match.Token, match.Text, match.Line);
         }
     }
 }

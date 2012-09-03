@@ -5,9 +5,9 @@ namespace GurkBurk.Internal
 {
     public class RowLexer : Lexer
     {
-        private readonly Listener listener;
+        private readonly IListener listener;
 
-        public RowLexer(Lexer parent, LineEnumerator lineEnumerator, Listener listener, Language language)
+        public RowLexer(Lexer parent, LineEnumerator lineEnumerator, IListener listener, Language language)
             : base(parent, lineEnumerator, language)
         {
             this.listener = listener;
@@ -37,7 +37,7 @@ namespace GurkBurk.Internal
         {
             var cols = match.ParsedLine.Text.Split(new[] {'|'});
             var l = cols.Skip(1).Take(cols.Length - 2).Select(column => column.Trim()).ToList();
-            listener.row(l, match.Line);
+            listener.Row(l, match.Line);
         }
     }
 }

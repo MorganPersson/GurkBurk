@@ -6,9 +6,9 @@ namespace GurkBurk.Internal
     public class CommentLexer : Lexer
     {
         private readonly Regex language = new Regex(@"language\s*(:|\s)\s*(?<language>[a-zA-Z\-]+)", RegexOptions.Compiled);
-        private readonly Listener listener;
+        private readonly IListener listener;
 
-        public CommentLexer(Lexer parent, LineEnumerator lineEnumerator, Listener listener, Language language)
+        public CommentLexer(Lexer parent, LineEnumerator lineEnumerator, IListener listener, Language language)
             : base(parent, lineEnumerator, language)
         {
             this.listener = listener;
@@ -41,12 +41,15 @@ namespace GurkBurk.Internal
             {
                 var languageString = ExtractLanguage(text);
                 if (Language.HasLanguage(languageString))
+                {
+                    listener.Language(languageString, match.Line);
                     ChangeLanguage(text);
+                }
                 else
                     throw new LexerError(string.Format("Line: {1}. Unknown language '{0}'", languageString, match.Line));
             }
 
-            listener.comment(match.Text, match.Line);
+            listener.Comment(match.Text, match.Line);
         }
 
         private void ChangeLanguage(string comment)

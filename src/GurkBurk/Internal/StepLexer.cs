@@ -5,9 +5,9 @@ namespace GurkBurk.Internal
     public class StepLexer : Lexer
     {
         private readonly Lexer[] children;
-        private readonly Listener listener;
+        private readonly IListener listener;
 
-        public StepLexer(Lexer parent, LineEnumerator lineEnumerator, Listener listener, Language language)
+        public StepLexer(Lexer parent, LineEnumerator lineEnumerator, IListener listener, Language language)
             : base(parent, lineEnumerator, language)
         {
             this.listener = listener;
@@ -31,7 +31,7 @@ namespace GurkBurk.Internal
 
         protected override void HandleToken(LineMatch match)
         {
-            listener.step(match.Token, match.Text, match.Line);
+            listener.Step(match.Token, match.Text, match.Line);
         }
     }
 }

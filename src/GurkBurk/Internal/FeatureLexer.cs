@@ -5,9 +5,9 @@ namespace GurkBurk.Internal
     public class FeatureLexer : Lexer
     {
         private readonly Lexer[] children;
-        private readonly Listener listener;
+        private readonly IListener listener;
 
-        public FeatureLexer(Lexer parent, LineEnumerator lineEnumerator, Listener listener, Language language)
+        public FeatureLexer(Lexer parent, LineEnumerator lineEnumerator, IListener listener, Language language)
             : base(parent, lineEnumerator, language)
         {
             this.listener = listener;
@@ -37,7 +37,7 @@ namespace GurkBurk.Internal
             string title = (newLine < 0) ? match.Text : match.Text.Substring(0, newLine);
             title = title.TrimEnd(new[] {'\r', ' ', '\t'});
             string narrative = (newLine < 0) ? "" : match.Text.Substring(newLine).TrimStart(new[] {'\n'});
-            listener.feature(match.Token, title, narrative, match.Line);
+            listener.Feature(match.Token, title, narrative, match.Line);
         }
     }
 }

@@ -6,9 +6,9 @@ namespace GurkBurk.Internal
 {
     public class TagLexer : Lexer
     {
-        private readonly Listener listener;
+        private readonly IListener listener;
 
-        public TagLexer(Lexer parent, LineEnumerator lineEnumerator, Listener listener, Language language)
+        public TagLexer(Lexer parent, LineEnumerator lineEnumerator, IListener listener, Language language)
             : base(parent, lineEnumerator, language)
         {
             this.listener = listener;
@@ -40,7 +40,7 @@ namespace GurkBurk.Internal
                 .Split(new[] {'@'}, StringSplitOptions.RemoveEmptyEntries)
                 .Select(_ => "@" + _.Trim());
             foreach (var tag in tags)
-                listener.tag(tag, match.Line);
+                listener.Tag(tag, match.Line);
         }
     }
 }

@@ -73,7 +73,7 @@
     <Compile Include="Internal\LineEnumerator.cs" />
     <Compile Include="Internal\LineMatch.cs" />
     <Compile Include="Internal\LineMatcher.cs" />
-    <Compile Include="Listener.cs" />
+    <Compile Include="IListener.cs" />
     <Compile Include="Internal\ParsedLine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Internal\RowLexer.cs" />

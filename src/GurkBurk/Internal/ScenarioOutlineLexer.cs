@@ -4,7 +4,7 @@ namespace GurkBurk.Internal
 {
     public class ScenarioOutlineLexer : ScenarioLexer
     {
-        public ScenarioOutlineLexer(Lexer parent, LineEnumerator lineEnumerator, Listener listener, Language language)
+        public ScenarioOutlineLexer(Lexer parent, LineEnumerator lineEnumerator, IListener listener, Language language)
             : base(parent, lineEnumerator, listener, language)
         {
         }
@@ -16,7 +16,7 @@ namespace GurkBurk.Internal
 
         protected override void HandleToken(LineMatch match)
         {
-            Listener.scenarioOutline(match.Token, match.Text, string.Empty, match.Line);
+            Listener.ScenarioOutline(match.Token, match.Text, match.Line);
         }
     }
 }

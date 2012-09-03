@@ -5,7 +5,7 @@ namespace GurkBurk.Internal
 {
     public class UriLexer : RowLexer
     {
-        public UriLexer(Lexer parent, LineEnumerator lineEnumerator, Listener listener, Language language)
+        public UriLexer(Lexer parent, LineEnumerator lineEnumerator, IListener listener, Language language)
             : base(parent, lineEnumerator, listener, language)
         { }
 

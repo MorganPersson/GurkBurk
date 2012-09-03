@@ -5,9 +5,9 @@ namespace GurkBurk.Internal
     public class ExampleLexer : Lexer
     {
         private readonly Lexer[] children;
-        private readonly Listener listener;
+        private readonly IListener listener;
 
-        public ExampleLexer(Lexer parent, LineEnumerator lineEnumerator, Listener listener, Language language)
+        public ExampleLexer(Lexer parent, LineEnumerator lineEnumerator, IListener listener, Language language)
             : base(parent, lineEnumerator, language)
         {
             this.listener = listener;
@@ -36,7 +36,7 @@ namespace GurkBurk.Internal
 
         protected override void HandleToken(LineMatch match)
         {
-            listener.examples(match.Token, string.Empty, string.Empty, match.Line);
+            listener.Examples(match.Token, string.Empty, match.Line);
         }
     }
 }

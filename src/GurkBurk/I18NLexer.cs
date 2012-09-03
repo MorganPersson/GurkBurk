@@ -5,9 +5,9 @@ namespace GurkBurk
 {
     public class I18nLexer
     {
-        private readonly Listener listener;
+        private readonly IListener listener;
 
-        public I18nLexer(Listener listener)
+        public I18nLexer(IListener listener)
         {
             this.listener = listener;
         }
@@ -25,7 +25,7 @@ namespace GurkBurk
             s.Parse();
             if ((lineEnumerator.HasMore || (string.IsNullOrEmpty(lineEnumerator.Current.Text) == false)))
                 throw new LexerError(new ParsedLine(lineEnumerator.Current.Text, "", lineEnumerator.Current.Line));
-            listener.eof();
+            listener.Eof();
         }
     }
 }
