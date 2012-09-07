@@ -158,25 +158,21 @@ namespace GurkBurk.Internal
         private LineMatcher matchAllLines;
         private readonly Lexer parent;
 
-        //Is this obsolete now?
         private LineMatcher BuildMatcherForAllLines()
         {
+            var t = this;
             if (matchAllLines == null)
             {
-                var root = GetLexerRoot();
                 var lexers = new Dictionary<Type, Lexer>();
-                BuildMatcherForAllLines(root.Children, lexers);
+                while (t != null)
+                {
+                    BuildMatcherForAllLines(t.Children, lexers);
+
+                    t = t.parent;
+                }
                 matchAllLines = new LineMatcher(lexers.Values);
             }
             return matchAllLines;
-        }
-
-        private Lexer GetLexerRoot()
-        {
-            Lexer root = this;
-            while (root.parent != null)
-                root = root.parent;
-            return root;
         }
 
         private void BuildMatcherForAllLines(IEnumerable<Lexer> children, Dictionary<Type, Lexer> lexers)
@@ -184,10 +180,7 @@ namespace GurkBurk.Internal
             foreach (var child in children)
             {
                 if (lexers.ContainsKey(child.GetType()) == false)
-                {
                     lexers.Add(child.GetType(), child);
-                    BuildMatcherForAllLines(child.Children, lexers);
-                }
             }
         }
 

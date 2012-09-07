@@ -294,10 +294,12 @@ namespace GurkBurkSpec
         }
 
         [Test]
-        public void step_must_be_preceeded_with_scenario()
+        public void step_must_be_preceeded_with_scenario_or_it_will_be_interpreted_as_narrative()
         {
             const string words = "Feature: foo\nGiven a\n Scenario: bar";
-            Assert.Throws<LexerError>(() => lexer.scan(words));
+            lexer.scan(words);
+            listener.AssertWasCalled(_ => _.Feature("Feature", "foo", "Given a", 1));
+            listener.AssertWasCalled(_ => _.Scenario("Scenario", "bar", 3));
         }
 
         [Test]
