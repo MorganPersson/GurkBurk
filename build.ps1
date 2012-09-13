@@ -12,6 +12,7 @@ properties {
 	$artifactsDir       = "$buildDir\Artifacts"
 	$exclusions         = @("*.pdb", "*.xml")
 	$buildVersion			  = (getFullVersion)
+	$assemblyInfoFile		= "$sourceDir\GurkBurk\Properties\AssemblyInfo.cs"
 }
 
 task Clean {
@@ -38,15 +39,18 @@ function getFullVersion() {
 }
 
 task Version {
-	$asmInfo = "$sourceDir\GurkBurk\Properties\AssemblyInfo.cs"
-	$src = Get-Content $asmInfo
+	Copy-Item $assemblyInfoFile "$assemblyInfoFile.bak"
+	$src = Get-Content $assemblyInfoFile
 	$newSrc = foreach($row in $src) {
 		if ($row -match 'Assembly((Version)|(FileVersion))\s*\(\s*"\d+\.\d+\.\d+\.\d+"\s*\)') {
-			$row -replace "\d+\.\d+\.\d+\.\d+", $version
+			$row -replace "`".*`"", ("`"$buildVersion`"")
+		}
+		elseif ($row -match 'AssemblyInformationalVersion') {
+			$row -replace "`".*`"", ("`"$version`"")
 		}
 		else { $row }
 	}
-	Set-Content -path $asmInfo -value $newSrc
+	Set-Content -path $assemblyInfoFile -value $newSrc
 }
 
 task Init -depends Clean, Version
@@ -61,8 +65,30 @@ task Test -depends Compile {
 
 	$arguments = Get-Item "$testDir\3.5\*Spec*.dll"
 	Exec { .\src\packages\nunit.2.5.10.11092\tools\nunit-console.exe $arguments /xml:$testReportsDir\UnitTests.xml}
+	Copy-Item "$assemblyInfoFile.bak" $assemblyInfoFile
+	Remove-Item "$assemblyInfoFile.bak"
 }
 
 task NuGet -depends Compile {
 	Exec { .\src\.nuget\nuget.exe pack "$rootDir\GurkBurk.nuspec"  -Version $version -OutputDirectory $artifactsDir}
+}
+
+task TagGithub {
+	#$x = git ls-remote "https://github.com/MorganPersson/GurkBurk.git"
+	#$x = git ls-remote "."
+	#$sha = $x[0].SubString(0,40)
+	#write-host "git sha1: $sha"
+
+	#authenticate first
+	#$ curl -u "username" https://api.github.com
+
+	#$urlAuth = "https://api.github.com/"
+	#$dataAuth = new-object Collections.Specialized.NameValueCollection
+	#$url = "https://api.github.com/repos/MorganPersson/GurkBurk/statuses/$sha"
+  #$wb = new-object Net.WebClient
+	#$data = new-object Collections.Specialized.NameValueCollection
+  #$data["status"] = (Get-Content ".\currentBuildStatus.txt")
+  #$data["target_rul"] = "url_to_ci_server_build"
+  #$data["description"] = "description"
+	#$response = wb.UploadValues($url, "POST", data)
 }
