@@ -242,8 +242,9 @@ namespace GurkBurkSpec
         [Test]
         public void Should_parse_tag()
         {
-            const string words = "@tag\nFeature: foo";
+            const string words = "\t@tag\nFeature: foo";
             lexer.scan(words);
+            listener.AssertWasNotCalled(_ => _.Tag("@", 1));
             listener.AssertWasCalled(_ => _.Tag("@tag", 1));
             listener.AssertWasCalled(_ => _.Feature("Feature", "foo", "", 2));
         }
@@ -399,6 +400,7 @@ namespace GurkBurkSpec
         {
             string words = TestData.AcceptanceTest.Replace("\r\n", "\n");
             lexer.scan(words);
+            listener.AssertWasNotCalled(_ => _.Tag("@", 2));
             listener.AssertWasCalled(_ => _.Tag("@tag1", 2));
             listener.AssertWasCalled(_ => _.Tag("@tag2", 2));
             listener.AssertWasCalled(_ => _.Feature("Feature", "foo", "\tAs a\n\tI want\n\tSo that", 3));

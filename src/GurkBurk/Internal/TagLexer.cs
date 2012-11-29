@@ -36,7 +36,7 @@ namespace GurkBurk.Internal
 
         protected override void HandleToken(LineMatch match)
         {
-            var tags = match.ParsedLine.Text
+            var tags = match.ParsedLine.Text.Trim()
                 .Split(new[] {'@'}, StringSplitOptions.RemoveEmptyEntries)
                 .Select(_ => "@" + _.Trim());
             foreach (var tag in tags)
