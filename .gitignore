@@ -10,3 +10,6 @@ _ReSharper.*
 bin
 obj
 version.txt
+TestResult.xml
+.paket/*
+.code

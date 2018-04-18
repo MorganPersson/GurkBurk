@@ -1,0 +1,5 @@
+source https://www.nuget.org/api/v2
+nuget fake
+nuget NUnit ~> 2.6
+nuget NUnit.Runners ~> 2.6
+nuget RhinoMocks >= 3.6
