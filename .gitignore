@@ -12,4 +12,6 @@ obj
 version.txt
 TestResult.xml
 .paket/*
-.code
+.code/*
+.fake/*
+paket-files/*

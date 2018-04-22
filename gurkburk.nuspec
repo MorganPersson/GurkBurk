@@ -2,7 +2,7 @@
 <package >
 	<metadata>
 		<id>GurkBurk</id>
-		<version>0.1.0.0</version>
+		<version>$version$</version>
 		<title>GurkBurk</title>
 		<authors>Morgan Persson</authors>
 		<owners>Morgan Persson</owners>
@@ -17,7 +17,6 @@
 		</dependencies>
 	</metadata>
 	<files>
-		<file src="build\v3.5\GurkBurk.dll" target="lib\net35" />
-		<file src="build\v4.0\GurkBurk.dll" target="lib\net40" />
+		<file src="build\net46\GurkBurk.dll" target="lib\net46" />
 	</files>
 </package>
