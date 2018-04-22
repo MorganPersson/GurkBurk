@@ -26,7 +26,7 @@ let buildDir = (rootDir + "/build") |> FullName
 let testReportsDir = (buildDir + "/test-reports") |> FullName
 let artifactsDir = (buildDir + "/artifacts") |> FullName
 let packagesDir = (rootDir + "/packages") |> FullName
-let nugetExe = (packagesDir + "/NuGet.CommandLine/tools/nuget.exe") |> FullName
+let nugetExe = (packagesDir + "/NuGet.CommandLine/tools/NuGet.exe") |> FullName
 let nugetAccessKey = getBuildParamOrDefault "nugetAccessKey" "NotSet"
 
 let appReferences = !! (sourceDir + "/**/GurkBurk.csproj")
@@ -110,13 +110,13 @@ Target "Test" (fun _ ->
   )
 )
 
-Target "Create NuGet packages" (fun _ ->
+Target "Package" (fun _ ->
   let nugetParams p =
     { p with
         ToolPath = nugetExe
         Version = nugetVersionNumber
         OutputPath = artifactsDir
-        WorkingDir = artifactsDir
+        WorkingDir = rootDir
         AccessKey = nugetAccessKey
         NoDefaultExcludes = true
     }
@@ -148,7 +148,7 @@ Target "Publish to NuGet" (fun _ ->
   ==> "AssemblyInfo"
   ==> "Compile"
   ==> "Test"
-//   ==> "Create NuGet packages"
+  ==> "Package"
 
 // Start build
 RunTargetOrDefault "Test"
