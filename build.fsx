@@ -7,7 +7,7 @@ open System
 open System.IO
 
 
-// params from teamcity
+// params from teamcity/commandline
 let buildNumber = getBuildParamOrDefault "buildNumber" "0"
 let buildTag = getBuildParamOrDefault "buildTag" "devlocal" // For release, set this to "release"
 let frameworkVersions = ["4.6"]
@@ -123,25 +123,27 @@ Target "Package" (fun _ ->
   NuGetPack nugetParams (Path.Combine(rootDir, "gurkburk.nuspec"))
 )
 
-(*
-Target "Publish to NuGet" (fun _ ->
+Target "Publish" (fun _ ->
   let nugetParams p project =
     { p with
           WorkingDir = rootDir
-          ToolPath = nugetExe
+          ToolPath = nugetExe.Replace(rootDir, "")
           AccessKey = nugetAccessKey
-          OutputPath = artifactsDir
+          OutputPath = "./" + artifactsDir.Replace(rootDir, "")
           Project = project
           Version = nugetVersionNumber
+          PublishTrials = 1
     }
-  let publish pkg =
+  let publish (pkg : String) =
     let project = Path.GetFileName(pkg).Replace(nugetVersionNumber, "").Replace(Path.GetExtension(pkg), "").TrimEnd([|'.'|])
-    //NuGetPublish (fun p -> nuGetParams p project) pkg
+    NuGetPublish (fun p ->
+      nugetParams p project)
     ()
-  let files = Directory.GetFiles(artifactsDir, "*.nupkg")
-  files |> Array.iter publish
+
+  Directory.GetFiles(artifactsDir, "*.nupkg")
+  |> Array.iter publish
 )
-*)
+
 // Dependencies
 "Clean"
   ==> "Set teamcity buildnumber"
@@ -149,6 +151,7 @@ Target "Publish to NuGet" (fun _ ->
   ==> "Compile"
   ==> "Test"
   ==> "Package"
+  ==> "Publish"
 
 // Start build
 RunTargetOrDefault "Test"
