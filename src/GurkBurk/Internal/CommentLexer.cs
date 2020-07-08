@@ -5,7 +5,8 @@ namespace GurkBurk.Internal
 {
     public class CommentLexer : Lexer
     {
-        private readonly Regex language = new Regex(@"language\s*(:|\s)\s*(?<language>[a-zA-Z\-]+)", RegexOptions.Compiled);
+        private const string regexString = @"language\s*(:|\s)\s*(?<language>[a-zA-Z\-]+)";
+        private readonly Regex language = new Regex(regexString, RegexOptions.Compiled);
         private readonly IListener listener;
 
         public CommentLexer(Lexer parent, LineEnumerator lineEnumerator, IListener listener, Language language)

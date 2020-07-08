@@ -17,6 +17,7 @@
 		</dependencies>
 	</metadata>
 	<files>
+		<file src="build/4.5/GurkBurk.dll" target="lib/net45" />
 		<file src="build/4.6/GurkBurk.dll" target="lib/net46" />
 	</files>
 </package>

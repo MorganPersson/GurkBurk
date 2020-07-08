@@ -10,9 +10,10 @@ open System.IO
 // params from teamcity/commandline
 let buildNumber = getBuildParamOrDefault "buildNumber" "0"
 let buildTag = getBuildParamOrDefault "buildTag" "devlocal" // For release, set this to "release"
-let frameworkVersions = ["4.6"]
+let frameworkVersions = ["4.5"]
+let netstandardVersions = ["netstandard1.3"]
 
-let version = "2.0"
+let version = "2.1"
 let assemblyVersion = version + "." + buildNumber
 let assemblyInfoVersion =
   match buildTag.ToLower() with
@@ -32,10 +33,19 @@ let nugetAccessKey = getBuildParamOrDefault "nugetAccessKey" "NotSet"
 let appReferences = !! (sourceDir + "/**/GurkBurk.csproj")
 let testReferences = !! (sourceDir + "/**/*Spec.csproj")
 
+// let dotnetcliVersion = "2.2.103"
+let dotnetcliVersion = "2.1.503"
+// let dotnetcliVersion = "2.1.302"
+// let dotnetcliVersion = "1.1.9"
+let mutable dotnetExePath = "/Users/morganpersson/.local/share/dotnetcore/dotnet"
 
 // --------------------------------------------------------------------------------------
 // Helpers
 // --------------------------------------------------------------------------------------
+let deleteObjectDirs () =
+  DeleteDirs (!! "src/**/obj")
+  DeleteDirs (!! "src/**/bin")
+
 let compileAnyCpu frameworkVer proj outputPathPrefix =
   build (fun f ->
           { f with
@@ -46,15 +56,81 @@ let compileAnyCpu frameworkVer proj outputPathPrefix =
                               ("TargetFrameworkVersion", "v" + frameworkVer)
                               ("OutputPath", Path.Combine(buildDir, outputPathPrefix + frameworkVer))
                             ]
-              Targets = ["Rebuild"]
+              Targets = ["Build"]
           }) proj
+
+let run' timeout cmd args dir =
+    if execProcess (fun info ->
+        info.FileName <- cmd
+        if not (String.IsNullOrWhiteSpace dir) then
+            info.WorkingDirectory <- dir
+        info.Arguments <- args
+    ) timeout |> not then
+        failwithf "Error while running '%s' with args: %s" cmd args
+
+let run = run' System.TimeSpan.MaxValue
+
+let runDotnet workingDir args =
+    let result =
+        ExecProcess (fun info ->
+            info.FileName <- dotnetExePath
+            info.WorkingDirectory <- workingDir
+            info.Arguments <- args) TimeSpan.MaxValue
+    if result <> 0 then failwithf "dotnet %s failed" args
+
+
+// --------------------------------------------------------------------------------------
+// Targets .netstandard
+// --------------------------------------------------------------------------------------
+
+
+Target "InstallDotNetCLI" (fun _ ->
+    dotnetExePath <- DotNetCli.InstallDotNetSDK dotnetcliVersion
+)
+
+// Target "Restore" (fun _ ->
+//     appReferences
+//     |> Seq.iter (fun p ->
+//         let dir = System.IO.Path.GetDirectoryName p
+//     //     runDotnet dir "restore"
+//         DotNetCli.Restore (fun p -> { p with WorkingDir = dir } )
+//     )
+// )
+
+Target "Build" (fun _ ->
+    // deleteObjectDirs ()
+
+    netstandardVersions
+    |> Seq.iter(fun v ->
+        deleteObjectDirs ()
+        appReferences
+        |> Seq.iter (fun p ->
+            let dir = System.IO.Path.GetDirectoryName p
+            printfn "--DIR-- '%s'" dir
+            DotNetCli.Restore (fun p -> { p with WorkingDir = dir } )
+            let outputDir = (buildDir + "/" + v) |> FullName
+            // let outputDir = (buildDir) |> FullName
+            // let args =
+            //     sprintf
+            //         "build %s -f %s -o %s --configuration Debug -v m --version-suffix alpha.001"
+            //             p v outputDir
+            let args =
+                sprintf
+                    "build %s -o %s --configuration Debug -v m --version-suffix alpha.001"
+                    p outputDir
+            runDotnet dir args
+        )
+    )
+)
 
 // --------------------------------------------------------------------------------------
 // Targets
 // --------------------------------------------------------------------------------------
 
+
 Target "Clean" (fun _ ->
   killMSBuild()
+  deleteObjectDirs ()
   CleanDirs [buildDir]
   CleanDirs [testReportsDir; artifactsDir]
 )
@@ -80,6 +156,8 @@ Target "AssemblyInfo" (fun _ ->
 )
 
 Target "Compile" (fun _ ->
+  deleteObjectDirs ()
+
   frameworkVersions
   |> Seq.iter (fun v ->
     appReferences
@@ -145,13 +223,18 @@ Target "Publish" (fun _ ->
 )
 
 // Dependencies
+// "Clean"
+//   ==> "Set teamcity buildnumber"
+//   ==> "AssemblyInfo"
+//   ==> "Compile"
+//   ==> "Test"
+//   ==> "Package"
+//   ==> "Publish"
+
 "Clean"
-  ==> "Set teamcity buildnumber"
-  ==> "AssemblyInfo"
-  ==> "Compile"
+//   ==> "Restore"
+  ==> "Build"
   ==> "Test"
-  ==> "Package"
-  ==> "Publish"
 
 // Start build
 RunTargetOrDefault "Test"

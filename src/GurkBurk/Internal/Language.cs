@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Linq;
 using GurkBurk.Yml;
 
@@ -30,7 +31,8 @@ namespace GurkBurk.Internal
 
         private void LoadLanguages()
         {
-            using (var r = GetType().Assembly.GetManifestResourceStream(GetType().Assembly.GetName().Name + ".i18n.yml"))
+            var assembly = typeof(Language).GetTypeInfo().Assembly;
+            using (var r = assembly.GetManifestResourceStream(assembly.GetName().Name + ".i18n.yml"))
             {
                 var ymlParser = new YmlParser();
                 languages = ymlParser.Parse(r);

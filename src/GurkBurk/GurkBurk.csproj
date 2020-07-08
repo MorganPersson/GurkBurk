@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -9,11 +9,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GurkBurk</RootNamespace>
     <AssemblyName>GurkBurk</AssemblyName>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFrameworks>netstandard1.3</TargetFrameworks>
+    <DisableImplicitFrameworkReferences Condition=" '$(TargetFramework)' == 'net45' ">true</DisableImplicitFrameworkReferences>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -25,40 +26,11 @@
     <Optimize>true</Optimize>
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Internal\BackgroundLexer.cs" />
-    <Compile Include="Internal\CommentLexer.cs" />
-    <Compile Include="Internal\DocStringLexer.cs" />
-    <Compile Include="Internal\ExampleLexer.cs" />
-    <Compile Include="Internal\Extensions.cs" />
-    <Compile Include="Internal\FeatureLexer.cs" />
-    <Compile Include="I18NLexer.cs" />
-    <Compile Include="Internal\UriLexer.cs" />
-    <Compile Include="Internal\Language.cs" />
-    <Compile Include="Internal\Lexer.cs" />
-    <Compile Include="Internal\UriFactory.cs" />
-    <Compile Include="LexerError.cs" />
-    <Compile Include="Internal\LineEnumerator.cs" />
-    <Compile Include="Internal\LineMatch.cs" />
-    <Compile Include="Internal\LineMatcher.cs" />
-    <Compile Include="IListener.cs" />
-    <Compile Include="Internal\ParsedLine.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Internal\RowLexer.cs" />
-    <Compile Include="Internal\ScenarioLexer.cs" />
-    <Compile Include="Internal\ScenarioOutlineLexer.cs" />
-    <Compile Include="Internal\StartLexer.cs" />
-    <Compile Include="Internal\StepLexer.cs" />
-    <Compile Include="Internal\TagLexer.cs" />
-    <Compile Include="Yml\YmlEntry.cs" />
-    <Compile Include="Yml\YmlParser.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="i18n.yml" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

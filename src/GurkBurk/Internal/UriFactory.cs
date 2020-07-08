@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Net.Http;
 
 namespace GurkBurk.Internal
 {
@@ -27,10 +28,33 @@ namespace GurkBurk.Internal
             return File.OpenText(uri.AbsolutePath);
         }
 
+        private static Stream StringToStream(string s)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
+        }
+
         private static StreamReader ReadHttp(Uri uri)
         {
-            var request = new System.Net.WebClient();
-            return new StreamReader(request.OpenRead(uri));
+            var response = "";
+            using (var client = new HttpClient())
+            {
+                var httpResponse = client.GetAsync(uri).Result;
+                if (httpResponse.IsSuccessStatusCode)
+                {
+                    var responseContent = httpResponse.Content;
+                    response = responseContent.ReadAsStringAsync().Result;
+                } else {
+                    throw new Exception(string.Format("Failed with http statuscode {0} - {1}", httpResponse.StatusCode, httpResponse.ReasonPhrase));
+                }
+            }
+
+        //     var request = new System.Net.WebClient();
+            return new StreamReader(StringToStream(response));
         }
     }
 }
