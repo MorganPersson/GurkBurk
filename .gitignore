@@ -13,5 +13,6 @@ version.txt
 TestResult.xml
 .paket/*
 .code/*
+.vscode/*
 .fake/*
 paket-files/*
