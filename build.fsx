@@ -33,10 +33,9 @@ let nugetAccessKey = getBuildParamOrDefault "nugetAccessKey" "NotSet"
 let appReferences = !! (sourceDir + "/**/GurkBurk.csproj")
 let testReferences = !! (sourceDir + "/**/*Spec.csproj")
 
-// let dotnetcliVersion = "2.2.103"
-let dotnetcliVersion = "2.1.503"
-// let dotnetcliVersion = "2.1.302"
-// let dotnetcliVersion = "1.1.9"
+// let dotnetcliVersion = "3.1.301" // C# 8.0, F# 4.7
+// let dotnetcliVersion = "2.2.207" // C# 7.3, F# 4.5 Support ended
+let dotnetcliVersion = "2.1.807" // C# 7.3, F# 4.5
 let mutable dotnetExePath = "/Users/morganpersson/.local/share/dotnetcore/dotnet"
 
 // --------------------------------------------------------------------------------------
